@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
@@ -17,7 +19,7 @@ def create_ticket(
     db: Session = Depends(get_db)
 ):
     new_ticket = Ticket(
-        reference_number="TKT-00001",
+        reference_number=f"TEMP-{uuid4().hex[:8]}",
         name=ticket.name,
         email=ticket.email,
         subject=ticket.subject,
@@ -28,6 +30,13 @@ def create_ticket(
     )
 
     db.add(new_ticket)
+
+    # Get the auto-generated database ID
+    db.flush()
+
+    # Generate the final customer reference number
+    new_ticket.reference_number = f"TKT-{new_ticket.id:05d}"
+
     db.commit()
     db.refresh(new_ticket)
 
