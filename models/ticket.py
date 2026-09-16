@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime
+from datetime import datetime
 from database.connection import Base
 
 # we create class  and name the database table and also some information also 
@@ -15,4 +16,4 @@ class Ticket(Base):
     category = Column(String(30), default="General", nullable=False)
     priority = Column(String(20), default="Medium", nullable=False)
     summary = Column(String(500), nullable=True)
-    created_at = Column(DateTime, nullable=False)
+created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
