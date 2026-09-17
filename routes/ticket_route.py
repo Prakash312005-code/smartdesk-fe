@@ -40,7 +40,30 @@ def create_ticket(
     db.commit()
     db.refresh(new_ticket)
 
+    
+@router.get("/")
+def get_tickets(db: Session = Depends(get_db)):
+    tickets = db.query(Ticket).all()
+
+    return {
+        "message": "Tickets fetched successfully",
+        "tickets": tickets
+    }
     return {
         "message": "Ticket created successfully",
         "ticket": new_ticket
     }
+
+
+    # get ticket by id 
+@router.get("/{ticket_id}")
+def get_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
+
+    if not ticket:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found"
+        )
+
+    return ticket
