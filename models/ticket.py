@@ -16,4 +16,4 @@ class Ticket(Base):
     category = Column(String(30), default="General", nullable=False)
     priority = Column(String(20), default="Medium", nullable=False)
     summary = Column(String(500), nullable=True)
-created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
