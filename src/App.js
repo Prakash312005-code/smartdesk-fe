@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import RaiseTicket from "./pages/raiseticket/RaiseTicket.jsx";
+import Confirmation from "./pages/confirmation/Confirmation.jsx";
+import Login from "./pages/login/Login.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import TicketList from "./pages/ticketlist/TicketList.jsx";
+import TicketDetail from "./pages/ticketdetail/TicketDetail.jsx";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute.jsx";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RaiseTicket />} />
+        <Route path="/confirmation" element={<Confirmation />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin/tickets" element={<ProtectedRoute><TicketList /></ProtectedRoute>} />
+        <Route path="/admin/tickets/:id" element={<ProtectedRoute><TicketDetail /></ProtectedRoute>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

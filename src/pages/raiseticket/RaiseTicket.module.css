@@ -1,0 +1,166 @@
+.page {
+  min-height: 100vh;
+  background: #f4f7fb;
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* Header */
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.logo {
+  font-size: 34px;
+  font-weight: 800;
+  color: #173b70;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: #2563eb;
+}
+
+.tagline {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Card */
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 38px;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.cardHeader {
+  margin-bottom: 28px;
+}
+
+.cardHeader h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  color: #111827;
+}
+
+.cardHeader p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Error */
+
+.apiError {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 13px 15px;
+  border-radius: 8px;
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+
+/* Form */
+
+.formGroup {
+  margin-bottom: 21px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.formGroup input {
+  height: 48px;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Validation */
+
+.inputError {
+  border-color: #dc2626 !important;
+}
+
+.errorText {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+/* Button */
+
+.submitButton {
+  width: 100%;
+  height: 50px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.submitButton:hover {
+  background: #1d4ed8;
+}
+
+.submitButton:active {
+  transform: translateY(1px);
+}
+
+.submitButton:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
