@@ -681,18 +681,11 @@ Request:
 ```json
 
 {
-
-"name": "John Doe"
-
-"email": "john@example.com"
-
-"subject": "Payment failed"
-
-"description": "My money was. My order was not created."
-
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "Payment failed",
+  "description": "My money was deducted but my order was not created."
 }
-
-```
 
 Response includes the ticket number and AI sorting results.
 
@@ -763,13 +756,9 @@ Request:
 ```json
 
 {
-
-"status": "In Progress"
-
-"remark": "Support team is investigating the issue."
-
+  "status": "In Progress",
+  "remark": "Support team is investigating the issue."
 }
-
 
 
 Allowed status values:
@@ -874,13 +863,9 @@ The application asks the model to return JSON containing:
 ```json
 
 {
-
-"category": "Billing"
-
-"priority": "High"
-
-"summary": "Customers payment was deducted but the order was not created."
-
+  "category": "Billing",
+  "priority": "High",
+  "summary": "Customer's payment was deducted but the order was not created."
 }
 
 ```
