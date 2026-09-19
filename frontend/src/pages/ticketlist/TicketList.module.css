@@ -327,6 +327,26 @@
   color: #4b5563;
   font-size: 14px;
 }
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exportButton {
+  height: 40px;
+  padding: 0 15px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.exportButton:hover {
+  background: #1d4ed8;
+}
 
 @media (max-width: 900px) {
   .filterCard {

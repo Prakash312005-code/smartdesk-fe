@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTickets } from "../../services/ticketService";
 import styles from "./TicketList.module.css";
+import {
+  getTickets,
+  exportTicketsCsv,
+} from "../../services/ticketService";
 
 function TicketList() {
   const navigate = useNavigate();
@@ -93,6 +96,23 @@ function TicketList() {
     setPage(1);
   };
 
+  const handleExportCsv = async () => {
+    try {
+      setError("");
+
+      await exportTicketsCsv({
+        search,
+        status,
+        category,
+        priority,
+      });
+    } catch (err) {
+      setError(
+        err.message || "Failed to export tickets"
+      );
+    }
+  };
+
   const getPriorityClass = (ticketPriority) => {
     return (
       styles[ticketPriority?.toLowerCase()] ||
@@ -135,9 +155,19 @@ function TicketList() {
             </p>
           </div>
 
-          <span className={styles.total}>
-            Total: {total}
-          </span>
+          <div className={styles.actions}>
+            <span className={styles.total}>
+              Total: {total}
+            </span>
+
+            <button
+              type="button"
+              className={styles.exportButton}
+              onClick={handleExportCsv}
+            >
+              Export CSV
+            </button>
+          </div>
         </div>
 
         <div className={styles.filterCard}>

@@ -1,7 +1,10 @@
 from uuid import uuid4
 import logging
+import csv
+import io
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -35,14 +38,18 @@ ALLOWED_PRIORITIES = {
     "High"
 }
 
+ALLOWED_STATUSES = {
+    "Open",
+    "In Progress",
+    "Resolved",
+    "Closed"
+}
 
 logger = logging.getLogger(__name__)
 
 
-
 # 1. CUSTOMER - CREATE TICKET
-#    PUBLIC API
-
+# PUBLIC API
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_ticket(
     ticket: TicketRequest,
@@ -68,8 +75,7 @@ def create_ticket(
     # Generate final reference number
     new_ticket.reference_number = f"TKT-{new_ticket.id:05d}"
 
-    # Gemini AI Classification
-
+    # Gemini AI classification
     try:
         ai_result = classify_ticket(
             ticket.subject,
@@ -124,8 +130,7 @@ def create_ticket(
 
 
 # 2. ADMIN - GET ALL TICKETS
-#    SEARCH + FILTER + PAGINATION
-
+# SEARCH + FILTER + PAGINATION
 @router.get("/")
 def get_tickets(
     page: int = Query(1, ge=1),
@@ -185,9 +190,93 @@ def get_tickets(
     }
 
 
-# 3. ADMIN - GET ONE TICKET
-#    TICKET DETAILS + STATUS HISTORY
+# 3. ADMIN - EXPORT FILTERED TICKETS AS CSV
+@router.get("/export/csv")
+def export_tickets_csv(
+    search: str | None = None,
+    status: str | None = None,
+    category: str | None = None,
+    priority: str | None = None,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    query = db.query(Ticket)
 
+    # Search
+    if search:
+        search_text = f"%{search}%"
+
+        query = query.filter(
+            or_(
+                Ticket.reference_number.ilike(search_text),
+                Ticket.name.ilike(search_text),
+                Ticket.email.ilike(search_text),
+                Ticket.subject.ilike(search_text)
+            )
+        )
+
+    # Filters
+    if status:
+        query = query.filter(Ticket.status == status)
+
+    if category:
+        query = query.filter(Ticket.category == category)
+
+    if priority:
+        query = query.filter(Ticket.priority == priority)
+
+    # Get all matching tickets
+    tickets = (
+        query
+        .order_by(Ticket.id.asc())
+        .all()
+    )
+
+    # Create CSV in memory
+    output = io.StringIO()
+
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "Reference",
+        "Name",
+        "Email",
+        "Subject",
+        "Description",
+        "Status",
+        "Category",
+        "Priority",
+        "Summary",
+        "Created At"
+    ])
+
+    for ticket in tickets:
+        writer.writerow([
+            ticket.reference_number,
+            ticket.name,
+            ticket.email,
+            ticket.subject,
+            ticket.description,
+            ticket.status,
+            ticket.category,
+            ticket.priority,
+            ticket.summary or "",
+            ticket.created_at
+        ])
+
+    output.seek(0)
+
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=tickets.csv"
+        }
+    )
+
+
+# 4. ADMIN - GET ONE TICKET
+# TICKET DETAILS + STATUS HISTORY
 @router.get("/{ticket_id}")
 def get_ticket(
     ticket_id: int,
@@ -246,16 +335,7 @@ def get_ticket(
     }
 
 
-# 4. ADMIN - UPDATE TICKET STATUS
-
-ALLOWED_STATUSES = {
-    "Open",
-    "In Progress",
-    "Resolved",
-    "Closed"
-}
-
-
+# 5. ADMIN - UPDATE TICKET STATUS
 @router.patch("/{ticket_id}/status")
 def update_ticket_status(
     ticket_id: int,
