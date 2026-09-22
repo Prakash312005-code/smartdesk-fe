@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from database.connection import get_db
 from dependencies.auth import get_current_admin
@@ -23,7 +24,7 @@ router = APIRouter(
     tags=["Tickets"]
 )
 
-
+# db parameter/variable
 # Allowed AI values
 ALLOWED_CATEGORIES = {
     "Technical",
@@ -104,7 +105,7 @@ def create_ticket(
         new_ticket.category = category
         new_ticket.priority = priority
         new_ticket.summary = summary.strip()
-
+# whatis ai fails
     except Exception as e:
         logger.error(
             "Gemini classification failed for %s: %s",
@@ -139,6 +140,8 @@ def get_tickets(
     status: str | None = None,
     category: str | None = None,
     priority: str | None = None,
+    from_date: datetime | None = None,
+    to_date: datetime | None = None,
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
@@ -169,6 +172,12 @@ def get_tickets(
     if priority:
         query = query.filter(Ticket.priority == priority)
 
+    if from_date:
+        query = query.filter(Ticket.created_at >= from_date)
+
+    if to_date:
+        query = query.filter(Ticket.created_at <= to_date)
+
     # Total matching tickets
     total = query.count()
 
@@ -188,6 +197,9 @@ def get_tickets(
         "total": total,
         "tickets": tickets
     }
+
+
+    
 
 
 # 3. ADMIN - EXPORT FILTERED TICKETS AS CSV
@@ -349,7 +361,7 @@ def update_ticket_status(
         .filter(Ticket.id == ticket_id)
         .first()
     )
-
+# Check if ticket exists
     if not ticket:
         raise HTTPException(
             status_code=404,

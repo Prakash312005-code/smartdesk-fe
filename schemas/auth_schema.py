@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+# API request/response data
 
 class LoginRequest(BaseModel):
     username: str

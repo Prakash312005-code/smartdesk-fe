@@ -19,9 +19,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+# Creates database tables
 Base.metadata.create_all(bind=engine)
-
+# . Registers those routes
 app.include_router(ticket_router)
 app.include_router(auth_router)
 app.include_router(dashboard_router)

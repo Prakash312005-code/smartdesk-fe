@@ -21,7 +21,7 @@ def get_current_admin(
     db: Session = Depends(get_db)
 ):
     token = credentials.credentials
-
+# sign and verify the JWT.
     secret_key = os.getenv("JWT_SECRET_KEY")
     algorithm = os.getenv("JWT_ALGORITHM", "HS256")
 

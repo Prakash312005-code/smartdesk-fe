@@ -3,7 +3,7 @@ from datetime import datetime
 
 from database.connection import Base
 
-
+# Creating the model
 class Admin(Base):
     __tablename__ = "admins"
 

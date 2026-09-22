@@ -1,5 +1,5 @@
 from datetime import datetime
-
+# SQLAlchemy types used to define table columns.
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 
 from database.connection import Base

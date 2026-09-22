@@ -11,12 +11,15 @@ load_dotenv(override=True)
 api_key = os.getenv("GEMINI_API_KEY")
 
 client = genai.Client(
+    # p/v
     api_key=api_key,
+    # c/obj
     http_options=types.HttpOptions(timeout=30000)
 )
 
 
 def classify_ticket(subject: str, description: str):
+    # formatted string
     prompt = f"""
 You are classifying a customer support ticket.
 
@@ -51,7 +54,7 @@ Required format:
             )
         )
     )
-
+# . Convert Gemini response to Python data
     return json.loads(response.text)
 
 
